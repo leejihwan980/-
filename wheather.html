@@ -18,6 +18,9 @@
     <meta property="og:image" content="main_img.webp">
     <link href="css_box/menu.css" rel="stylesheet" type="text/css"><!--메뉴바 설정-->
    <style >div{text-align:center,}</style>
+<!-------------------------현재 날씨------------------------------>
+   <script src="javascript_box\Weather.js"></script>
+ <!--   <script src="https://kit.fontawesome.com/096073a2a8.js"crossorigin="anonymous"></script>-->
 </head>
    
 <body>
@@ -25,12 +28,12 @@
     <script src="/css_box/menu.css"></script>
 
         <img src="main_img.webp" style="vertical-align:text-middle;max-width: 10%;height: auto;" >
-        <p style="font-size: 25px; vertical-align:text-middle;">경호의 날씨나라</p><br/><br/>
+        <p style="font-size: 25px; vertical-align:text-middle;">경호의 날씨나라</p><br><br/>
     
     <nav>
         
         <ul class="menu">
-          <li><a href="#">오늘 날씨</a></li>
+          <li><a href="https://naver.com">오늘 날씨</a></li>
             <li><a href="#">내일 날씨</a></li>
             <li>    <a href="#">주간 날씨</a></li>
             <li><a href="#">요요 날씨</a></li>
@@ -39,14 +42,19 @@
         <!--등등-->
          </ul>
     </nav><br></br>
-    <section>
-        <p style="font-size: 80px; text-align: center;">
-            오늘의 날씨
-        </p>
-        <div class="absolute-img"><img  src="매번 바뀌는 이미지" alt=""> 
-            <!--매일 갱신돼는 날씨 이미지-->
-        </div><!--이미지 넣기-->
-        <p style="font-size: 25px; vertical-align:text-bottom;">몇도</p><br/><br/>
-    </section>
+        <section class="weather-container">
+            <div class="weather-data">
+                <h1 class="location"><class class="fas fa-city"></class></h1>
+                <div class="current-time"></div>
+            </div>
+            <div class="weather-temp">
+                <div class="current-temp"></div>
+                <div class="icon"></div>
+                <div class="feels-like"></div>
+                <div class="max-temp"></div>
+                <div class="min-temp"></div>
+            </div>
+        </section>
+
 </body>
 </html>
