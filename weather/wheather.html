@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <style>
+        img{float: left};
+    </style>
+
+    <title> 홈 - 경호의 날씨나라</title>  
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    
+    <!--------------------------------------------------------------------->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!--초기 크기 설정-->
+    <!--스마트폰-->
+    <link rel="apple-touch-icon-precomposed" href="/w/iphone-shortcut.png">
+    <meta property="og:title" content="경호의 날씨나라"><!--페이지 제목-->
+    <meta property="og:description" content="기상청 날씨누리">
+    <meta property="og:image" content="main_img.webp">
+    <link href="css_box/menu.css" rel="stylesheet" type="text/css"><!--메뉴바 설정-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+   <style >div{text-align:center,}</style>
+<!-------------------------현재 날씨------------------------------>
+   <script src="javascript_box\Weather.js"></script>
+ <!--   <script src="https://kit.fontawesome.com/096073a2a8.js"crossorigin="anonymous"></script>-->
+
+</head>
+   
+<body>
+    <!--<div class="ba-wrap on" id="banner_2021"><div class="ba-body"><div class="ba-body-text"><a href="https://www.kma.go.kr/kma/" title="새창열림" target="_blank"><em>기상행정 누리집 바로가기</em></a></div><a href="#" class="ba-close"><span>오늘은 <span>그만보기</span></span></a></div></div>-->
+    <script src="/css_box/menu.css"></script>
+
+        <img src="main_img.webp" style="vertical-align:text-middle;max-width: 10%;height: auto;" >
+        <p style="font-size: 25px; vertical-align:text-middle;">날씨나라</p><br><br/>
+    
+    <nav>
+        
+        <ul class="menu">
+          <li><a href="https://naver.com">오늘 날씨</a></li>
+            <li><a href="#">내일 날씨</a></li>
+            <li>    <a href="#">주간 날씨</a></li>
+            <li><a href="#">요요 날씨</a></li>
+            <li><a href="#">요요 날씨</a></li>
+        
+        <!--등등-->
+         </ul>
+    </nav><br></br>
+        <section class="weather-container">
+            <div class="weather-data">
+                <h1 class="location"></h1>
+                <div class="current-time"></div>
+            </div>
+            <div class="weather-temp">
+                <div class="current-temp">현재 온도: </div>
+                <div class="icon"></div>
+                <div class="humidity">습도: </div>
+                <div class="currentWindSpeed">바람: </div>
+                <div class="currentFeelsLike">체감온도: </div>
+                <div class="max-temp">일일 최고 온도: </div>
+                <div class="min-temp">일일 최저 온도: </div>
+            </div>
+        </section>
+
+</body>
+</html>
