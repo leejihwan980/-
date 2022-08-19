@@ -17,10 +17,14 @@
     <meta property="og:description" content="기상청 날씨누리">
     <meta property="og:image" content="main_img.webp">
     <link href="css_box/menu.css" rel="stylesheet" type="text/css"><!--메뉴바 설정-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
    <style >div{text-align:center,}</style>
 <!-------------------------현재 날씨------------------------------>
    <script src="javascript_box\Weather.js"></script>
  <!--   <script src="https://kit.fontawesome.com/096073a2a8.js"crossorigin="anonymous"></script>-->
+
 </head>
    
 <body>
@@ -28,7 +32,7 @@
     <script src="/css_box/menu.css"></script>
 
         <img src="main_img.webp" style="vertical-align:text-middle;max-width: 10%;height: auto;" >
-        <p style="font-size: 25px; vertical-align:text-middle;">경호의 날씨나라</p><br><br/>
+        <p style="font-size: 25px; vertical-align:text-middle;">날씨나라</p><br><br/>
     
     <nav>
         
@@ -51,11 +55,10 @@
                 <div class="current-temp">현재 온도: </div>
                 <div class="icon"></div>
                 <div class="humidity">습도: </div>
-                <div class="currentWindSpeed">현재 풍속: </div>
-                <div class="currentWindDirecton"></div>
+                <div class="currentWindSpeed">바람: </div>
                 <div class="currentFeelsLike">체감온도: </div>
-                <div class="max-temp"></div>
-                <div class="min-temp"></div>
+                <div class="max-temp">일일 최고 온도: </div>
+                <div class="min-temp">일일 최저 온도: </div>
             </div>
         </section>
 

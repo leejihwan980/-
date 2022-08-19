@@ -1,8 +1,8 @@
 const getJSON = function(url,callback){
     const xhr=new XMLHttpRequest();
     xhr.open('GET',url,true);
-    xhr.responseType='json';
-    xhr.onload=function(){
+    xhr.responseType = 'json';
+    xhr.onload = function(){
         const status=xhr.status;
         if(status==200){
             callback(null,xhr.response);
@@ -13,7 +13,32 @@ const getJSON = function(url,callback){
     xhr.send();
 };
 
-const Direction = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW','NW', 'NNW', 'N'];
+const getAddress = function(lat, lng){
+		$.ajax({
+    		url : 'https://dapi.kakao.com/v2/local/geo/coord2address.json?x=' + lng + '&y=' + lat,
+        type : 'GET',
+        headers : {
+        	'Authorization' : 'KakaoAK 4bb8c93d8c5f76b608d493203a0abd11'
+        },
+        success : function(data) {
+        	//console.log(data);
+          let address = data.documents[0].address.region_1depth_name;
+
+          address += " " + data.documents[0].address.region_2depth_name;
+          address += " " + data.documents[0].address.region_3depth_name
+          
+          let location= document.querySelector('.location');
+  			  location.append(address);
+        },
+        error : function(e) {
+        	console.log(e);
+        }
+    })
+}
+
+
+//const Direction = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW','NW', 'NNW', 'N'];
+
 
 function getDate(){
 
@@ -156,24 +181,13 @@ function dfs_xy_conv(code, v1, v2) {
 
 function locationSuccess(p){
     var latitude = p.coords.latitude, longitude = p.coords.longitude;
-   /* //지명
-    var geoURL = 'https://dapi.kakao.com/v2/local/geo/coord2address.json?';
-		geoURL += 
-    getJSON(url,
-    function(err,data){
-        if(err!=null){
-            alert("Error: " + err);
-        }
-        else{
-            
-        }
-    });
-    */
+
+    getAddress(latitude, longitude); // 현재 좌표를 지명으로 표시
+
+    var rs = dfs_xy_conv("toXY",latitude,longitude); // 위도/경도 -> 기상청 좌표x / 좌표 y 변환
+		requestMinMaxWeather(rs.nx, rs.ny, getDate());
+    requestCurWeather(rs.nx, rs.ny, getDate());
     
-    var rs = dfs_xy_conv("toXY",latitude,longitude);
-    // 위도/경도 -> 기상청 좌표x / 좌표 y 변환
-    let date = getDate();
-    requestCurWeather(rs.nx, rs.ny, date);
 }
 // locationSuccess
 
@@ -205,98 +219,92 @@ function requestCurWeather(nx, ny, date){
             alert("Error: " + err);
         }
         else{
-        		
+        		const Direction = ['북', '북북동', '북동', '동북동', '동', '동남동', '남동', '남남동', '남', '남남서', '남서', '서남서', '서', '서북서','북서', '북북서', '북'];
         		let currentHumidity = document.querySelector('.humidity');
         		let currentTemp=document.querySelector('.current-temp');
             let currentWindSpeed = document.querySelector('.currentWindSpeed');
             let currentFeelsLike = document.querySelector('.currentFeelsLike');
-            let currentWindDirection = document.querySelector('.currendWindDirection');
+            let currentWindDirection = document.querySelector('.currentWindDirecton');
             
             var temp = parseFloat(data.response.body.items.item[3].obsrValue);
             var humidity = parseFloat(data.response.body.items.item[1].obsrValue);
             var windSpeed = parseFloat(data.response.body.items.item[7].obsrValue);
             var windDirect = parseFloat(data.response.body.items.item[5].obsrValue);
             var feels_like = Math.round(getNewHeatSCT(temp, humidity)*10)/10;
-            alert(Direction[getWindDirction(windDirect)]);
-            //currentWindDirection.append(`${}`);
+            var wD = Direction[getWindDirction(windDirect)];
+            
            	currentTemp.append(`${temp}℃`);
             currentHumidity.append(`${humidity}%`);
-            currentWindSpeed.append(`${windSpeed}m/s`);
+            currentWindSpeed.append(`${wD} ${windSpeed}m/s`);
+            
             currentFeelsLike.append(`${feels_like}℃`);
+            
         }
     });
     
 }
 
 
+function requestSky(nx, ny, date){
+		
+}
 
 
-function requestMaxMinTemp(nx, ny){
 
-    let date = new Date();
-    let year = date.getFullYear().toString();
-    let month = transDateFormat(date.getMonth()+1);
-    let day= date.getDate();
-    let hours= date.getHours();
-    let minutes= date.getMinutes();
-    if(minutes < 10){
-        hours -= 1;
+function requestMinMaxWeather(nx, ny, date){
+
+		if(date.hour < 2 || (date.hour == 2 && date.minutes < 10)){
+    		date.day -= 1;
+        date.hours = 2;
+        date.minutes = 0;
+        
     }
-    if(hours == 0 || hours == 1){
-        day -= 1;
-        hours = 23;
+		else{
+    	date.hours = 2;
+    	date.minutes = 0;
     }
-
-    if(hours % 3 != 2){
-        if(hours % 3 == 0){
-            hours -= 1;
-        }
-        else if(hours % 3 == 1){
-            hours -= 2;
-        }
-    }
-    day = transDateFormat(day);
-    minutes = transDateFormat(minutes);
-    hours = transDateFormat(hours);
-
-    let url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?';
+    date = transDateFormat(date);
+    
+    var curDate = getDate();
+    curDate = transDateFormat(curDate);
+    var today = curDate.year + curDate.month + curDate.day;
+    
+    let url = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?';
     url += 'serviceKey=GaxrGgNHrS7DEO5Gv8QEQ0OmHMiOJNHlL2JOExGSfhHLlKcs4TqlxGAVN3xUAW%2FYWKOVC6z%2Fx8SwaTy9ujMUEQ%3D%3D'; 
         /*API 키*/
     url += '&numOfRows=700&pageNo=1&dataType=JSON';
-    url += '&base_date=' + year + month + day;
-    url += '&base_time=' + hours + minutes;
+    url += '&base_date=' + date.year + date.month + date.day;
+    url += '&base_time=' + date.hours + date.minutes;
     url += '&nx=' + nx;
     url += '&ny=' + ny;
+    
+    
     /*
     let icon=document.querySelector('.icon');
     icon.innerHTML='<h1>'+ url + '</h1>';
 		*/
-
+		
     getJSON(url,
     function(err,data){
         if(err!=null){
             alert("Error: " + err);
         }
         else{
-            loadWeather(data);
+            var result = data.response.body.items.item.filter(minTemp => minTemp.category == "TMN" && minTemp.fcstDate == today);
+            let minTemp = document.querySelector('.min-temp');
+            minTemp.append(`${result[0].fcstValue}℃`);
+            result = data.response.body.items.item.filter(maxTemp => maxTemp.category == "TMX" && maxTemp.fcstDate == today);
+            let maxTemp = document.querySelector('.max-temp');
+            maxTemp.append(`${result[0].fcstValue}℃`);
+            
+						
+            
         }
     });
+    
 
 }
 
-function loadWeather(data){
-		
-    let location= document.querySelector('.location');
-    let currentTime=document.querySelector('.current-time');
-    
-    let feelsLike=document.querySelector('.feels-like');
-    let minTemp=document.querySelector('.min-temp');
-    let maxTemp=document.querySelector('.max-temp');
-    let icon=document.querySelector('.icon');
-
-
-    
-}
 
 	// 겨울철 체감온도 계산함수: 풍속 
 	function getNewWCT(Tdum,Wdum) {
